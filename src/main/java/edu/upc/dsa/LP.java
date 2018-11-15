@@ -11,4 +11,9 @@ public class LP {
         this.quantity = quantity;
     }
 
+
+    @Override
+    public String toString() {
+        return "Pedido [Name=" + product + ", Quantity=" + quantity + "]";
+    }
 }

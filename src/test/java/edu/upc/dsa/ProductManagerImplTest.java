@@ -1,8 +1,7 @@
 package edu.upc.dsa;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.apache.log4j.Logger;
+import org.junit.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -12,14 +11,14 @@ import static org.junit.Assert.*;
 
 public class ProductManagerImplTest {
 
-    ProductManager productManager;
+    final static Logger log = Logger.getLogger(ProductManagerImpl.class.getName());
+    static ProductManager productManager;
     static Product product1,product2,product3,product4;
     static Pedido pedido1,pedido2;
-    static  List<LP> lp1,lp2;
     static List<LP> listaLP1,listaLP2;
 
-    @Before
-    public void setUp(){
+    @BeforeClass
+    public static void setUp(){
 
         productManager =  ProductManagerImpl.getInstance();
 
@@ -28,7 +27,7 @@ public class ProductManagerImplTest {
         productManager.addUser("Sergi");
         productManager.addUser("Laura");
 
-        product1 = new Product("CocaCola",2);
+        product1 = new Product("Cocacola",2);
         product2 = new Product("Fanta",3);
         product3 = new Product("Aigua",1);
         product4 = new Product("Aquarius",4);
@@ -48,85 +47,78 @@ public class ProductManagerImplTest {
         pedido1 = new Pedido(listaLP1);
         pedido2 = new Pedido(listaLP2);
 
+        //productManager.realizarPedido("Marc",pedido1);
+        productManager.realizarPedido("Sergi",pedido1);
+        productManager.realizarPedido("Laura",pedido2);
 
     }
-    @After
-    public void tearDown()
-    {
-        productManager = null;
-    }
+
 
     @Test
     public void realizarPedido(){
 
 
-        this.productManager.realizarPedido("Sergi",pedido1);
-        this.productManager.realizarPedido("Laura",pedido2);
 
-        assertEquals(listaLP1.get(0).product.name,"CocaCola");
+
+        assertEquals(listaLP1.get(0).product.name,"Cocacola");
         assertEquals(listaLP1.get(0).quantity,5);
         assertEquals(listaLP1.get(0).product.getSales(),5);
         assertEquals(pedido1.getUser().getName(),"Sergi");
         assertEquals(pedido1.products.get(0).quantity,5,0);
 
-
-
-
-        List<Product> listProductsOrderedBySales= productManager.findAllProductsOrderedBySales();
-
-        assertEquals(listProductsOrderedBySales.get(0).getSales(),10,0);
     }
 
-    @Test
-    public void servirPedido(){
 
-        this.productManager.realizarPedido("Sergi",pedido1);
-        this.productManager.realizarPedido("Laura",pedido2);
-
-        pedido1 = this.productManager.servirPedido();
-        pedido2 = this.productManager.servirPedido();
-
-        assertEquals(pedido1.products.get(0).quantity,5,0);
-        assertEquals(pedido1.getUser().getName(),"Sergi");
-        assertEquals(pedido1.products.get(0).product.getName(),"CocaCola");
-
-    }
 
     @Test
     public void findAllProductsOrderedByPrice(){
+
         List<Product> listProductsOrderedByPrice = this.productManager.findAllProductsOrderedByPrice();
 
         assertEquals(listProductsOrderedByPrice.get(0).getName(),"Aigua");
-        assertEquals(listProductsOrderedByPrice.get(1).getName(),"CocaCola");
+        assertEquals(listProductsOrderedByPrice.get(1).getName(),"Cocacola");
         assertEquals(listProductsOrderedByPrice.get(2).getName(),"Fanta");
         assertEquals(listProductsOrderedByPrice.get(3).getName(),"Aquarius");
     }
 
     @Test
     public void findAllProductsOrderedBySales(){
-        this.productManager.realizarPedido("Sergi",pedido1);
-        this.productManager.realizarPedido("Laura",pedido2);
 
         List<Product> listProductsOrderedBySales= this.productManager.findAllProductsOrderedBySales();
 
-        assertEquals(listProductsOrderedBySales.get(0).getSales(),10,0);
+        assertEquals(listProductsOrderedBySales.get(0).sales,10,0);
         assertEquals(listProductsOrderedBySales.get(0).getName(),"Fanta");
-        assertEquals(listProductsOrderedBySales.get(1).getName(),"CocaCola");
+        assertEquals(listProductsOrderedBySales.get(1).getName(),"Cocacola");
         assertEquals(listProductsOrderedBySales.get(1).getSales(),5,0);
     }
 
 
     @Test
     public void historialUser(){
-        this.productManager.realizarPedido("Sergi",pedido1);
-        this.productManager.realizarPedido("Sergi",pedido2);
+
         List<Pedido> historial = this.productManager.pedidosUnUsuario("Sergi");
-        assertEquals(historial.get(0).products.get(0).product.getName(),"CocaCola");
+        assertEquals(historial.get(0).products.get(0).product.getName(),"Cocacola");
         assertEquals(historial.get(0).products.get(1).product.getName(),"Fanta");
-        assertEquals(historial.get(1).products.get(0).product.getName(),"Aigua");
-        assertEquals(historial.get(1).products.get(1).product.getName(),"Aquarius");
+        //assertEquals(historial.get(1).products.get(0).product.getName(),"Aigua");
+        //assertEquals(historial.get(1).products.get(1).product.getName(),"Aquarius");
     }
 
+    @Test
+    public void servirPedido(){
 
+        pedido1 = this.productManager.servirPedido();
+        pedido2 = this.productManager.servirPedido();
+
+        assertEquals(pedido1.products.get(0).quantity,5,0);
+        assertEquals(pedido1.getUser().getName(),"Sergi");
+        assertEquals(pedido1.products.get(0).product.getName(),"Cocacola");
+
+    }
+
+    @AfterClass
+    public static void tearDown()
+    {
+        productManager = null;
+    }
 
 }

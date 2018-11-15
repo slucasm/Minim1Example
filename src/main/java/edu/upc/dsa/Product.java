@@ -29,4 +29,9 @@ public class Product {
     public void addSales(int quantity) {
         this.sales =this.sales + quantity;
     }
+
+    @Override
+    public String toString() {
+        return "Product [Name = " + name + ", Precio = " + price +", Sales = " + sales + "]";
+    }
 }

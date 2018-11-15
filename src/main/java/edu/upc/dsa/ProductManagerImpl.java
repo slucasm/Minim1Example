@@ -1,8 +1,11 @@
 package edu.upc.dsa;
 
 import java.util.*;
+import org.apache.log4j.Logger;
 
 public class ProductManagerImpl implements ProductManager {
+
+    final static Logger log = Logger.getLogger(ProductManagerImpl.class.getName());
 
     private static ProductManager instance;
 
@@ -30,6 +33,7 @@ public class ProductManagerImpl implements ProductManager {
                 return (int) (o1.getPrice()-o2.getPrice());
             }
         });
+        log.info("List products ordered by price:" +listOfProductsOrderedByPrice);
         return listOfProductsOrderedByPrice;
     }
 
@@ -42,35 +46,50 @@ public class ProductManagerImpl implements ProductManager {
             }
 
         });
+        log.info("List of products ordered by sales: " +listOfProductsOrderedBySales);
         return listOfProductsOrderedBySales;
     }
 
     public void realizarPedido(String user, Pedido P) {
         User usuario = this.userMap.get(user);
-        P.setUser(usuario);
-        List<LP> listLP = P.getProducts();
-        Product product;
-        for(LP lp:listLP)
-        {
-            product = lp.product;
-            product.addSales(lp.quantity);
-            lp.quantity = product.getSales();
+        log.info("User: " + user);
+        if (usuario != null) {
+            P.setUser(usuario);
+            List<LP> listLP = P.getProducts();
+            Product product;
+            for (LP lp : listLP) {
+                product = lp.product;
+                product.addSales(lp.quantity);
+                lp.quantity = product.getSales();
+            }
+            usuario.addPedido(P);
+            this.pedidoList.add(P);
         }
-        usuario.addPedido(P);
-        this.pedidoList.add(P);
+        else {
+            log.warn("The user don't exist");
+        }
     }
 
     public Pedido servirPedido() {
         Pedido p = this.pedidoList.pop();
-
-
-
+        log.info("The order is served");
+        log.info("The order is from the user: " +p.getUser().name);
         return p;
     }
 
     public LinkedList<Pedido> pedidosUnUsuario(String user) {
         User usuario = this.userMap.get(user);
-        LinkedList<Pedido> listaPedidosUsuario = usuario.getHistorialPedido();
+        LinkedList<Pedido> listaPedidosUsuario = new LinkedList<>();
+
+        if (usuario != null) {
+            log.info("User: " +user);
+            listaPedidosUsuario = usuario.getHistorialPedido();
+            log.info("Orders historial: "+listaPedidosUsuario);
+        }
+        else{
+            log.warn("The user don't exist");
+
+        }
         return listaPedidosUsuario;
     }
 
