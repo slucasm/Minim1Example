@@ -143,20 +143,21 @@ public class OrdersService {
         return Response.status(201).entity(user).build();
     }
 
-    /*@POST
+    @POST
     @ApiOperation(value = "place an Order", notes = "asdasd")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful"),
             @ApiResponse(code = 404, message = "User not found")
     })
-    @Path("/placeanorder")
+    @Path("/{user}placeanorder")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response placeAnOrder(String user,Pedido p) {
+    public Response placeAnOrder(@PathParam("user") String user,Pedido p) {
         HashMap<String,User> users  = pm.allUsers();
         User usuario = users.get(user);
 
         if (usuario!= null) {
-            p.setUser(usuario);
+
+            //p.setUser(usuario);
             this.pm.realizarPedido(user,p);
             return Response.status(201).build();
         }
@@ -164,7 +165,7 @@ public class OrdersService {
             return Response.status(404).build();
         }
     }
-*/
+
     @DELETE
     @ApiOperation(value = "serve an order", notes = "asdasd")
     @ApiResponses(value = {
