@@ -1,5 +1,6 @@
 package edu.upc.dsa;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ProductManager {
@@ -10,4 +11,8 @@ public interface ProductManager {
     List<Pedido> pedidosUnUsuario(String user);
     void addUser(String user);
     void addProduct(Product p);
+
+    int size();
+    List<Product> allProducts();
+    HashMap<String, User> allUsers();
 }

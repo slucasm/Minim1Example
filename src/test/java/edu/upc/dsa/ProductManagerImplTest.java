@@ -96,7 +96,7 @@ public class ProductManagerImplTest {
     @Test
     public void historialUser(){
 
-        List<Pedido> historial = this.productManager.pedidosUnUsuario("Sergi");
+        List<Pedido> historial = this.productManager.pedidosUnUsuario("Laur");
         assertEquals(historial.get(0).products.get(0).product.getName(),"Cocacola");
         assertEquals(historial.get(0).products.get(1).product.getName(),"Fanta");
         //assertEquals(historial.get(1).products.get(0).product.getName(),"Aigua");

@@ -102,4 +102,18 @@ public class ProductManagerImpl implements ProductManager {
         this.productList.add(p);
     }
 
+
+    public int size() {
+        return productList.size();
+    }
+
+
+    public List<Product> allProducts() {
+        return productList;
+    }
+
+    public HashMap<String, User> allUsers() {
+        return userMap;
+    }
+
 }
